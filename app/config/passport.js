@@ -1,0 +1,51 @@
+'use strict';
+
+//facebook strategy
+var User = require('../models/users');
+var configAuth = require('./auth');
+var passport = require('passport')
+  , FacebookStrategy = require('passport-facebook').Strategy;
+
+
+module.exports = function (passport) {
+	passport.serializeUser(function (user, done) {
+		done(null, user.id);
+	});
+
+	passport.deserializeUser(function (id, done) {
+		User.findById(id, function (err, user) {
+			done(err, user);
+		});
+    });
+    //facebook strategy
+    passport.use(new FacebookStrategy({
+        clientID: configAuth.facebookAuth.clientID,
+        clientSecret: configAuth.facebookAuth.clientSecret,
+        callbackURL: configAuth.facebookAuth.callbackURL 
+      },
+      function(accessToken, refreshToken, profile, done) {
+        process.nextTick(function () {
+        User.findOne({ 'facebook.id': profile.id }, function(err, user) {
+          if (err) { return done(err); }
+          if (user) {
+            return done(null, user);
+        } else {
+            
+            //creating a new user ...
+            var newUser = new User();
+
+            newUser.facebook.id = profile.id;
+            newUser.facebook.displayName = profile.displayName;
+          //  newUser.facebook.token = accessToken;
+            newUser.save(function (err) {
+                if (err) {
+                    throw err;
+                }
+                return done(null, newUser);
+            });
+        }
+        });
+      });
+    }
+    ));
+};
