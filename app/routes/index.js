@@ -2,6 +2,7 @@
 
 var path = process.cwd();
 var Users = require('../models/users');
+//var UserHandler = require(path + '/app/controllers/userController.server.js');
 
 module.exports = function (app, passport) {
 
@@ -13,26 +14,31 @@ module.exports = function (app, passport) {
 		} else {
             console.log("not authenticated");
 			res.redirect('/login');
-		}
+        }
+        return next();
     }
-   
+   /*
     app.route('/')
         .get(isLoggedIn, function (req, res) {
             
             res.sendFile(path + '/public/index.html');
-        });
-        
+        });*/
+       
+      
     app.route('/login')
         .get(function (req, res) {
             res.sendFile(path + '/public/login.html');
         });
-    
+     
     app.route('/logout')
         .get(function (req, res) {
             req.logout();
             res.redirect('/login');
         });
-    
+    app.route('/react')
+        .get(function (req, res) {
+            res.sendFile(path + '/front/public/index.html');
+        });
     app.route('/profile')
         .get(isLoggedIn, function (req, res,next) {
             //retrieve user from database equal to user logged in
@@ -43,17 +49,31 @@ module.exports = function (app, passport) {
             { if (err) {
                 throw err;
                 } if (result) {console.log(`user exists as ${result.facebook.displayName}`)
+                
+                
                 res.sendFile(path + '/public/profile.html');
+                
             } 
         });
     });
-
-        
+//api for data
+/*
+app.post('/profile/edit', (req, res) => {
+    var newMessage = new Message(req.body);
+    newMessage.save((err, doc) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(doc);
+      }
+    });
+  });
+        */
 
     //containers user object from facebook
-    app.route('/api/:id')
-        .get(isLoggedIn, function (req, res) {
-            res.json(req.user.facebook);
+    app.route('/api/id')
+        .get( function (req, res) {
+            res.json({id: 'hello im here'});
         });
     
     app.route('/auth/facebook')

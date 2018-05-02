@@ -7,7 +7,8 @@ var express = require('express'),
 	session = require('express-session'),
 	https = require('https');
 	var bodyParser = require('body-parser');
-
+	var router = express.Router();
+	var Users = require('./app/models/users');
 var app = express();
 require('dotenv').load();
 
@@ -31,7 +32,6 @@ app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/common', express.static(process.cwd() + '/app/common'));
 
-
 app.use(session({
 	secret: 'secretClementine',
 	resave: false,
@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');	res.setHeader('Access-Control-Allow-Credentials', 'true');
 	res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
 	res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-  	next()
+  	next();
 });
 
 app.use(passport.initialize());

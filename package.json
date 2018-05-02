@@ -3,20 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.2",
+    "concurrently": "^3.5.1",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "foreman": "^2.0.0",
     "mongoose": "^5.0.16",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-router": "^4.2.0",
     "react-scripts": "1.1.4",
     "uuid": "^3.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "front": "npm start --prefix front",
+    "dev": "concurrently \"npm run server\" \"npm run front\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
